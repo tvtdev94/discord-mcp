@@ -30,7 +30,7 @@ Allows AI assistants (Claude, etc.) to manage Discord servers — send messages,
 
 ## Prerequisites
 
-- [.NET 9 Runtime](https://dotnet.microsoft.com/download/dotnet/9.0) (or SDK if building from source)
+- [Docker](https://docs.docker.com/get-docker/)
 - A [Discord bot token](https://discord.com/developers/applications) with appropriate permissions
 
 ### Required Bot Permissions
@@ -41,29 +41,7 @@ Allows AI assistants (Claude, etc.) to manage Discord servers — send messages,
 - Manage Webhooks, Manage Emojis, Manage Events
 - Read Members (privileged intent), Message Content (privileged intent)
 
-## Installation (End Users)
-
-### Option A: Install as .NET global tool (recommended)
-
-```bash
-dotnet tool install -g DiscordMcp.Server
-```
-
-Then configure your MCP client to use the tool command directly.
-
-### Option B: Download pre-built binary
-
-Download the latest release from [Releases](../../releases) for your platform (win-x64, linux-x64, osx-arm64), extract, and note the path.
-
-### Option C: Build from source
-
-```bash
-git clone <repo-url>
-cd discord-mcp-csharp
-dotnet publish -c Release -o ./publish
-```
-
-## Configuration
+## Setup
 
 ### Step 1: Get your IDs
 
@@ -74,9 +52,8 @@ Enable **Developer Mode** in Discord (Settings → Advanced → Developer Mode),
 
 ### Step 2: Configure your MCP client
 
-Pick the method matching your installation. Replace the 3 values with your own IDs.
+Replace the 3 values with your own IDs.
 
-**Docker (easiest — no .NET needed):**
 ```json
 {
   "mcpServers": {
@@ -86,39 +63,7 @@ Pick the method matching your installation. Replace the 3 values with your own I
         "-e", "DISCORD_TOKEN",
         "-e", "DISCORD_GUILD_ID",
         "-e", "DISCORD_OPERATOR_ID",
-        "yourname/discord-mcp-server:latest"],
-      "env": {
-        "DISCORD_TOKEN": "your-bot-token",
-        "DISCORD_GUILD_ID": "your-server-id",
-        "DISCORD_OPERATOR_ID": "your-user-id"
-      }
-    }
-  }
-}
-```
-
-**dotnet global tool:**
-```json
-{
-  "mcpServers": {
-    "discord": {
-      "command": "discord-mcp-server",
-      "env": {
-        "DISCORD_TOKEN": "your-bot-token",
-        "DISCORD_GUILD_ID": "your-server-id",
-        "DISCORD_OPERATOR_ID": "your-user-id"
-      }
-    }
-  }
-}
-```
-
-**Downloaded binary:**
-```json
-{
-  "mcpServers": {
-    "discord": {
-      "command": "C:/path/to/DiscordMcp.Server.exe",
+        "ghcr.io/tvtdev94/discord-mcp:latest"],
       "env": {
         "DISCORD_TOKEN": "your-bot-token",
         "DISCORD_GUILD_ID": "your-server-id",
@@ -132,58 +77,16 @@ Pick the method matching your installation. Replace the 3 values with your own I
 ### Claude Code
 
 ```bash
-# Docker
 claude mcp add discord -- docker run -i --rm \
   -e DISCORD_TOKEN="your-bot-token" \
   -e DISCORD_GUILD_ID="your-server-id" \
   -e DISCORD_OPERATOR_ID="your-user-id" \
-  yourname/discord-mcp-server:latest
-
-# Or dotnet tool
-claude mcp add discord \
-  -e DISCORD_TOKEN="your-bot-token" \
-  -e DISCORD_GUILD_ID="your-server-id" \
-  -e DISCORD_OPERATOR_ID="your-user-id" \
-  -- discord-mcp-server
+  ghcr.io/tvtdev94/discord-mcp:latest
 ```
 
-### Step 4: Verify
+### Step 3: Verify
 
 Ask Claude: *"List my Discord channels"* — if it returns channel names, you're set.
-
-## Developer Setup
-
-### From source
-
-```bash
-git clone <repo-url>
-cd discord-mcp-csharp
-dotnet build
-```
-
-MCP client config (from source):
-```json
-{
-  "mcpServers": {
-    "discord": {
-      "command": "dotnet",
-      "args": ["run", "--project", "/path/to/discord-mcp-csharp/DiscordMcp.Server.csproj"],
-      "env": {
-        "DISCORD_TOKEN": "your-bot-token",
-        "DISCORD_GUILD_ID": "your-default-server-id",
-        "DISCORD_OPERATOR_ID": "your-discord-user-id"
-      }
-    }
-  }
-}
-```
-
-### Docker
-
-```bash
-docker build -t discord-mcp-server .
-docker run -e DISCORD_TOKEN="your-token" -e DISCORD_OPERATOR_ID="your-id" discord-mcp-server
-```
 
 ## Environment Variables
 
@@ -194,6 +97,25 @@ docker run -e DISCORD_TOKEN="your-token" -e DISCORD_OPERATOR_ID="your-id" discor
 | `DISCORD_OPERATOR_ID` | No | Your Discord user ID — enables message attribution and audit logging |
 | `DISCORD_CONTACTS_PATH` | No | Custom path for contacts.json |
 | `DISCORD_AUDIT_PATH` | No | Custom path for audit logs (default: app directory) |
+
+## Developer Setup
+
+```bash
+git clone https://github.com/tvtdev94/discord-mcp.git
+cd discord-mcp
+dotnet build
+```
+
+Build & run with Docker:
+
+```bash
+docker build -t discord-mcp .
+docker run -i --rm \
+  -e DISCORD_TOKEN="your-token" \
+  -e DISCORD_GUILD_ID="your-server-id" \
+  -e DISCORD_OPERATOR_ID="your-user-id" \
+  discord-mcp
+```
 
 ## Architecture
 

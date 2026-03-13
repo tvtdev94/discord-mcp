@@ -4,7 +4,7 @@ WORKDIR /src
 COPY DiscordMcp.Server.csproj .
 RUN dotnet restore
 COPY . .
-RUN dotnet publish -c Release -o /app --no-restore
+RUN dotnet publish DiscordMcp.Server.csproj -c Release -o /app --no-restore
 
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/runtime:9.0-alpine
