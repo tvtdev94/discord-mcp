@@ -1,0 +1,29 @@
+{
+  "name": "discord-mcp-server",
+  "displayName": "Discord MCP Server",
+  "description": "Manage Discord servers via 70+ MCP tools — messages, channels, roles, moderation, webhooks, and more.",
+  "transport": "stdio",
+  "envVars": {
+    "DISCORD_TOKEN": {
+      "description": "Discord bot token (required)",
+      "required": true,
+      "secret": true
+    },
+    "DISCORD_GUILD_ID": {
+      "description": "Default Discord server ID (optional, used as fallback when guildId is omitted)",
+      "required": false
+    },
+    "DISCORD_OPERATOR_ID": {
+      "description": "Your Discord user ID for message attribution and audit logging (optional)",
+      "required": false
+    },
+    "DISCORD_AUDIT_PATH": {
+      "description": "Custom path for audit log files (optional, defaults to app directory)",
+      "required": false
+    },
+    "DISCORD_CONTACTS_PATH": {
+      "description": "Custom path for contacts.json storage (optional, defaults to app directory)",
+      "required": false
+    }
+  }
+}

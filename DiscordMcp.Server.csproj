@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>DiscordMcp.Server</AssemblyName>
+    <RootNamespace>DiscordMcp</RootNamespace>
+
+    <!-- Enable 'dotnet tool install -g' distribution -->
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>discord-mcp-server</ToolCommandName>
+    <PackageId>DiscordMcp.Server</PackageId>
+    <PackageType>McpServer</PackageType>
+    <Version>1.0.0</Version>
+    <Description>Discord MCP Server — manage Discord via Model Context Protocol tools</Description>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/readme.md" />
+    <None Include=".mcp/server.json" Pack="true" PackagePath="/.mcp/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Discord.Net" Version="3.17.2" />
+    <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="ModelContextProtocol" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.0" />
+  </ItemGroup>
+
+</Project>

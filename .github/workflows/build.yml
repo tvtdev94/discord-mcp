@@ -1,0 +1,36 @@
+name: Build & Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore
+        run: dotnet restore DiscordMcp.Server.csproj
+
+      - name: Build
+        run: dotnet build DiscordMcp.Server.csproj -c Release --no-restore
+
+      - name: Check formatting
+        run: dotnet format DiscordMcp.Server.csproj --verify-no-changes --no-restore || true
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t discord-mcp-server:${{ github.sha }} .
